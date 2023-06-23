@@ -1,0 +1,41 @@
+#include <SoftwareSerial.h>
+SoftwareSerial mySerial(8, 9);
+
+///////////////////////////////////////////////////////////
+
+void setup() 
+{
+  Serial.begin(9600);
+  mySerial.begin(9600); 
+  JQ6500_PLAY_FILE(1);
+}
+ 
+void loop()
+{  
+  if(Serial.available())
+  {
+    char gelen=Serial.read();    
+    switch(gelen)
+    {
+    case '1': JQ6500_PLAY_FILE(0X01); Serial.println("1");           break;    
+    case '2': JQ6500_PLAY_FILE(0X02); Serial.println("2");           break;    
+    case '3': JQ6500_PLAY_FILE(0x03); Serial.println("3");           break;    
+    
+    }
+  }
+}
+ 
+///////////////////////////////////////////////////////////
+ 
+void JQ6500_PLAY_FILE(uint16_t file)
+{
+  byte high= (file>>8)&0x00ff;
+  byte low= file&0x00ff;
+  mySerial.write(0x7E); 
+  mySerial.write(0x04);
+  mySerial.write(0x03);  
+  mySerial.write(high); 
+  mySerial.write(low); 
+  mySerial.write(0xEF);  
+ // delay(500);
+}
